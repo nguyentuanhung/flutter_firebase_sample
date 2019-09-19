@@ -19,11 +19,28 @@ class _HomeState extends State<Home> {
       body: FutureBuilder<FirebaseUser>(
         future: AppAuth().currentUser,
         builder: (context, snapshot) {
+          if (user == null) {
+            return Container();
+          }
+          
           return Center(
             child: Column(
               children: <Widget>[
                 Text(
                     "Hello ${snapshot.data?.displayName ?? snapshot.data?.email}"),
+                FlatButton(
+                  child: Text("Reauth"),
+                  onPressed: () {
+                    user
+                        .reauthenticateWithCredential(
+                            EmailAuthProvider.getCredential(
+                                email: "hung-nguyen@test.com",
+                                password: "123456"))
+                        .then((result) {
+                      result.toString();
+                    });
+                  },
+                ),
                 FlatButton(
                   child: Text("Log out"),
                   onPressed: () {
